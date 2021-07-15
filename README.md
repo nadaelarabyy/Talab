@@ -32,9 +32,12 @@ python3 -m venv env
 ```sh
 .\env\Scripts\activate
 ```
+## Get to project !!
+```sh
+cd Talab
+```
 ## RUN !!
 ```sh
 streamlit run frontend.py
 ```
-## Check your browser on 
-``` http://localhost:8501```
+## Check your browser on ``` http://localhost:8501```
