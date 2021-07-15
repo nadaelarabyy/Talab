@@ -4,6 +4,7 @@ from ortools.linear_solver import pywraplp
 import math
 import random
 import pandas as pd
+import time
 custs=0
 rests=0
 dgs=0
@@ -702,13 +703,28 @@ if __name__ == '__main__':
     input_files_path = sys.argv[1] # testset input
     # generateInput(custs,rests,dgs,dishes,rl,vehs,maxCPD,UB,t)
     # for i in range(2,11):
-    print(generateInputExcel(10,10,10,6,200,5,20,200,20))
+    # print(generateInputExcel(10,10,10,6,200,5,20,200,20))
+    cols = ["test_case","MIP","Time","DP","Time","Greedy","Time","MetaH","Time"]
+    rows = []
+
     for test_case in sorted(os.listdir(f'{input_files_path}'), key=lambda x: int(x[5:-3])):
         t = test_case[:-3]
         print("Solving",t)
-        # print(MIP(input_files_path,t))
-        # print(Dynamic(input_files_path,t))
-        # print(Greedy(input_files_path,t))
-        # print(MetaHeuristic(input_files_path,t))
+        start = time.time()
+        solM = round(float(MIP(input_files_path,t)[0]),2)
+        tM = time.time()-start
+        start = time.time()
+        solD = round(float(Dynamic(input_files_path,t)[0]),2)
+        tD = time.time()-start
+        start = time.time()
+        solG = round(float(Greedy(input_files_path,t)[0]),2)
+        tG = time.time()-start
+        start = time.time()
+        solMe = round(float(MetaHeuristic(input_files_path,t)[0]),2)
+        tMe = time.time()-start
+
+        rows = rows + [[t,solM,tM,solD,tD,solG,tG,solMe,tMe]]
+    summary = pd.DataFrame(rows, columns=cols)
+    summary.to_csv(f"Summary.csv", index=False)
             
 

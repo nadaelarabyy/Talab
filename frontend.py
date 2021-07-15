@@ -55,7 +55,7 @@ def read_value(input_file):
     return custs,rests,dgs,dishes,rl,vehs,w,vehicle_types,cpd,max_orders,rests_dishes,clients_favs,customer_locations,restaurant_locations,delivery_locations,orders
 
 def draw(plt,rest_cust,del_cust):
-    plt.scatter(np.array(restaurant_locations)[:,0],np.array(restaurant_locations)[:,1],marker='o',c='red',label="reaturants")
+    plt.scatter(np.array(restaurant_locations)[:,0],np.array(restaurant_locations)[:,1],marker='o',c='red',label="Restaurants")
     plt.scatter(np.array(client_locations)[:,0],np.array(client_locations)[:,1],marker='x',c='blue',label="Customers")
     plt.scatter(np.array(delivery_locations)[:,0],np.array(delivery_locations)[:,1],marker='^',c='green',label="Couriers")
     plt.title("Map Visualization")

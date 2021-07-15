@@ -3,7 +3,7 @@
 
 Talab is an Application developed to help people order food in much faster way
 
-  - Choose a dish.
+  - Choose a dish.  
   - Wait for it !!
 
 # Steps!
