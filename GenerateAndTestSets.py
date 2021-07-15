@@ -650,7 +650,7 @@ def generateInputExcel(custs,rests,dgs,dishes,rl,vehs,maxCPD,UB,t):
         orders="#".join(map(str,orders))
         rows = rows + [[custs,rests,dishes,dgs,rl,vehs,w,vehicle_types,cpd,max_orders,rests_dishes,clients_favs,customer_locations,restaurant_locations,delivery_locations,orders]]
     summary = pd.DataFrame(rows, columns=cols)
-    summary.to_csv("big_sets/summary.csv", index=False)
+    summary.to_csv(f"big_sets/test_{t}.csv", index=False)
     
     # output = ""+str(custs)+" "+str(rests)+" "+str(dgs) +" "+str(dishes) +" "+str(rl)+" "+str(vehs)+" "+ str(w)+"\n"
     # for v in vehicle_types:
