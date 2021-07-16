@@ -699,32 +699,128 @@ def generateInputExcel(custs,rests,dgs,dishes,rl,vehs,maxCPD,UB,t):
     #     myfile.write(output)
     # return output
     
+def calculateTimeCsv(input_files_path,t):   
+    cols = ["test_case","MIP","Time","DP","Time","Greedy","Time","MetaH","Time"]
+    rows = [] 
+    start = time.time()
+    solM = round(float(MIP(input_files_path,t)[0]),2)
+    tM = time.time()-start
+    start = time.time()
+    solD = round(float(Dynamic(input_files_path,t)[0]),2)
+    tD = time.time()-start
+    start = time.time()
+    solG = round(float(Greedy(input_files_path,t)[0]),2)
+    tG = time.time()-start
+    start = time.time()
+    solMe = round(float(MetaHeuristic(input_files_path,t)[0]),2)
+    tMe = time.time()-start
+    rows = rows + [[t,solM,tM,solD,tD,solG,tG,solMe,tMe]]
+    summary = pd.DataFrame(rows, columns=cols)
+    summary.to_csv(f"Summary.csv", index=False)
+
+
+
+
+def getDistance(solution):
+    # number of delivered orders*INF - transportation
+    restaurants = solution[0]
+    deliverys = solution[1]
+    obj = 0
+    for i in range(len(restaurants)):
+        if solution[0][i] >-1:
+            obj += (calcualte_dist(delivery_locations[deliverys[i]],restaurant_locations[restaurants[i]])+calcualte_dist(restaurant_locations[restaurants[i]],customer_locations[i]))
+    return obj
+def countRests(solution):
+    # number of delivered orders*INF - transportation
+    restaurants = solution[0]
+    restaurants = list(dict.fromkeys(restaurants))
+    # print(rests,restaurants)
+    return (len(restaurants)-restaurants.count(-1))
+def getPercentage(solution):
+    # number of delivered orders*INF - transportation
+    restaurants = solution[0]
+    
+    used = [0]*rests
+    for i in range(len(restaurants)):
+        if restaurants[i] >-1:
+           used[restaurants[i]] += 1
+    for i in range(len(used)):
+        used[i] = used[i]/max_orders[i]
+    return used
+def convert(output):
+    rests = output[1][0]
+    courier = output[1][1]
+    rest_cust=[-1]*custs
+    del_cust=[-1]*custs
+    for i,r in enumerate(rests):
+        if len(r)>0:
+            v=r.split(' ')
+            for v1 in v:
+                if len(v1)>0:
+                    rest_cust[int(v1)]=i
+    for i,d in enumerate(courier):
+        if len(d)>0:
+            del_cust[int(d)]=i
+    return [rest_cust,del_cust]
 if __name__ == '__main__':
     input_files_path = sys.argv[1] # testset input
     # generateInput(custs,rests,dgs,dishes,rl,vehs,maxCPD,UB,t)
-    # for i in range(2,11):
-    # print(generateInputExcel(10,10,10,6,200,5,20,200,20))
-    cols = ["test_case","MIP","Time","DP","Time","Greedy","Time","MetaH","Time"]
-    rows = []
+    # for i in range(20,50):
+    #     generateInput(10,5,10,3,20,2,10,10,i)
+    
 
     for test_case in sorted(os.listdir(f'{input_files_path}'), key=lambda x: int(x[5:-3])):
         t = test_case[:-3]
-        print("Solving",t)
-        start = time.time()
-        solM = round(float(MIP(input_files_path,t)[0]),2)
-        tM = time.time()-start
-        start = time.time()
-        solD = round(float(Dynamic(input_files_path,t)[0]),2)
-        tD = time.time()-start
-        start = time.time()
-        solG = round(float(Greedy(input_files_path,t)[0]),2)
-        tG = time.time()-start
-        start = time.time()
-        solMe = round(float(MetaHeuristic(input_files_path,t)[0]),2)
-        tMe = time.time()-start
+        if True:
+            print("Solving",t)
+            solM = MIP(input_files_path,t)
+            print("MIP")
+            solM1 = convert(solM)
 
-        rows = rows + [[t,solM,tM,solD,tD,solG,tG,solMe,tMe]]
-    summary = pd.DataFrame(rows, columns=cols)
-    summary.to_csv(f"Summary.csv", index=False)
+            solD = Dynamic(input_files_path,t)
+            print("DP")
+            solD1 = convert([solD[0],[solD[2],solD[1]]])
+            solG = Greedy(input_files_path,t)
+            print("Greedy")
+
+            solMe = MetaHeuristic(input_files_path,t)
+            print("Meta")
+
+            perM = getPercentage(solM1)
+            lM = ""
+            for i,m in enumerate(perM):
+                lM+="rest:"+str(i)+" with "+str(round(m,2)*100)+"%\n"
+            perD = getPercentage(solD1)
+            lD = ""
+            for i,m in enumerate(perD):
+                lD+="rest:"+str(i)+" with "+str(round(m,2)*100)+"%\n"
+            perG = getPercentage(solG[1])
+            lG = ""
+            for i,m in enumerate(perG):
+                lG+="rest:"+str(i)+" with "+str(round(m,2)*100)+"%\n"
+            perMe = getPercentage(solMe[1])
+            lMe = ""
+            for i,m in enumerate(perMe):
+                lMe+="rest:"+str(i)+" with "+str(round(m,2)*100)+"%\n"
+            cols = ["Metrics","MIP","DP","Greedy","MetaH"]
+            rows = [] 
+            rows = rows + [["Objective Value",round(float(solM[0]),2),round(float(solD[0]),2),round(float(solG[0]),2),round(float(solMe[0]),2)]]
+            rows = rows + [["Delivered Clients",len(solM1[1]) - solM1[1].count(-1),len(solD1[1]) - solD1[1].count(-1),len(solG[1][1]) - solG[1][1].count(-1),len(solMe[1][1]) - solMe[1][1].count(-1)]] 
+            rows = rows + [["Total distance covered",round(getDistance(solM1),2),round(getDistance(solD1),2),round(getDistance(solG[1]),2),round(getDistance(solMe[1]),2)]] 
+            rows = rows + [["Number of used restaurants",countRests(solM1),countRests(solD1),countRests(solG[1]),countRests(solMe[1])]]
+            rows = rows + [["Utilization",lM,lD,lG,lMe]]
+
+            summary = pd.DataFrame(rows, columns=cols)
+            summary.to_csv(f"Out_CSV/detailed_result_{t}.csv", index=False)
+            # print(summary)
+
+            
+
+
+
+        
+
+        
+    
             
 

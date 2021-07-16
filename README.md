@@ -28,13 +28,23 @@ Install the dependencies and devDependencies and start the App
 ```sh
 python3 -m venv env
 ```
-## Activate 
+## Activate on windows 
 ```sh
 .\env\Scripts\activate
 ```
-## Get to project !!
+
+## Activate on Linux 
+```sh
+source env/bin/activate
+```
+
+## Get to project directory
 ```sh
 cd Talab
+```
+## Install project dependencies
+```sh
+pip3 install -r requirements.txt 
 ```
 ## RUN !!
 ```sh

@@ -1,0 +1,30 @@
+Metrics,MIP,DP,Greedy,MetaH
+Objective Value,239541.11,239541.11,239204.18,239541.11
+Delivered Clients,4,4,4,4
+Total distance covered,241.48,241.48,353.79,241.48
+Number of used restaurants,3,3,3,3
+Utilization,"rest:0 with 100.0%
+rest:1 with 0.0%
+rest:2 with 50.0%
+rest:3 with 0.0%
+rest:4 with 0.0%
+rest:5 with 33.0%
+","rest:0 with 100.0%
+rest:1 with 0.0%
+rest:2 with 50.0%
+rest:3 with 0.0%
+rest:4 with 0.0%
+rest:5 with 33.0%
+","rest:0 with 50.0%
+rest:1 with 0.0%
+rest:2 with 0.0%
+rest:3 with 33.0%
+rest:4 with 0.0%
+rest:5 with 67.0%
+","rest:0 with 100.0%
+rest:1 with 0.0%
+rest:2 with 50.0%
+rest:3 with 0.0%
+rest:4 with 0.0%
+rest:5 with 33.0%
+"
