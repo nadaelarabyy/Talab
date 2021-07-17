@@ -769,8 +769,8 @@ if __name__ == '__main__':
     input_files_path = sys.argv[1] # testset input
     calculateTimeCsv(input_files_path)
     # generateInput(custs,rests,dgs,dishes,rl,vehs,maxCPD,UB,t)
-    # for i in range(20,50):
-        # generateInput(10,5,10,3,20,2,10,10,i)
+    # for i in range(51,100):
+    #     generateInput(100,100,100,10,200,5,10,10,i)
     
 
     # for test_case in sorted(os.listdir(f'{input_files_path}'), key=lambda x: int(x[5:-3])):
